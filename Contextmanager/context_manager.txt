@@ -1,0 +1,24 @@
+ A context manager is used to manage resources, such as opening and closing files, 
+ connecting and disconnecting from databases, acquiring and releasing locks, etc., 
+ ensuring that resources are properly cleaned up after use.
+
+The @contextmanager simplifies the process of creating a context manager without 
+having to define a class that implements the __enter__ and __exit__ methods.
+
+What are Generators?
+You open them one step at a time (next() or a loop), and they give you what you need. 
+Instead of creating and storing everything at once, they do the work only when asked. 
+Super useful for saving memory and working with big data!
+
+Difference Between return and yield
+return: Ends the function and gives back a value. 
+After return, the function is done forever.
+yield: Pauses the function and gives back a value. 
+The function can resume later and keep running from where it paused.
+
+Why Generators Are Awesome
+
+    Memory-Efficient: Only generates data when needed.
+    Infinite Sequences: You can create an endless sequence, like numbers counting forever,
+     without crashing your program.
+    Simple to Use: Just use yield and let Python handle the rest.

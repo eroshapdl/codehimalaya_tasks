@@ -1,0 +1,17 @@
+with open_file('sample.txt', 'w') as file: 
+yesle open_file function call garcha as file
+
+def open_file (filename, mode): ma jancha. filename and mode
+argument vayen. with parameter sample.txt', 'w' 
+
+file = open (filename, mode)
+file vannne var ma open func le sample.txt write mode ma open garcha.
+
+yield file le sample.txt write mode ma vako return garcha, back to with open_file.
+
+ani, file.write ("hello. iam erosha!") execute huncha
+
+print (file.closed) le file close vayo ki vayena vanera boolean value dincha
+
+
+
