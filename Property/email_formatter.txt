@@ -1,0 +1,34 @@
+Property decorator allows us to define a method and
+we can access like the attribute.
+
+@property
+    def email (self):
+        email = f"{self.first}.{self.last}@gmail.com"
+        return email
+        
+yo code ma when we used property, 
+print (emp_1.email)
+email print garda, we are treating it like attribute not function.
+
+full name ma suru ma property laagko chaina so, return garda
+print (emp_1.fullname())
+we are doing this. () means function
+
+A setter is used to allow controlled modification of an attribute.
+In this case, fullname is treated as an attribute:
+
+Without the setter, you'd have to modify first and last directly:
+
+emp_1.first = 'Dp'
+emp_1.last = 'Pdl'
+
+. Why Use @fullname.deleter?
+
+The deleter is used to define behavior when the del keyword is used on the fullname attribute:
+
+Key Advantages of Using Getter, Setter, and Deleter
+
+    Encapsulation: You can control how attributes are accessed and modified.
+    Validation: You can add validation when setting attributes (e.g., ensure the name has two parts).
+    Consistency: Updating fullname automatically updates first and last.
+    Intuitive Interface: Attributes like fullname and email can be accessed without knowing the internal logic.

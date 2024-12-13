@@ -1,0 +1,49 @@
+def decorator (func):
+   def wrap (*args, **kwargs):
+       print (f"{func.__name__} is called with {args} and {kwargs}")
+       Return func (*args, **kwargs)
+
+
+   return wrap
+
+
+@decorator
+def add (a,b):
+   return a+b
+add_result = add (2,3)
+print (add_result)
+
+
+
+
+
+Add two numbers w decorator
+We wrap function in decorator in order to extend behaviour of wrapped function without touching it.
+
+At first add (a,b) is a simple function that returns the addition.
+@decorator is equivalent to add = decorator (add)
+
+And in the  first, the decorator function an  argument called func is passed. Here func is a function that is passed as parameter. Func means add(a,b) here.
+
+And the function has another function called wrap inside it which takes the any number of args and kwargs from add() function. And here return func (*args, **kwargs) means add(a,b) is being called and returned. And wrap function is returned. 
+add_result = add (2,3) 
+print (add_result) passes the 2,3 argument to add func. 
+  The op will be:
+
+add is called with (2, 3) and {}
+5
+
+** i forgot to return func (agrs, kwargs) suruma
+
+2. Closure
+>>> def outer():
+...     x = 1
+...     def inner():
+...         print x # 1
+...     return inner
+>>> foo = outer()
+>>> foo.func_closure
+x is a local variable in our function outer. When inner prints x at point #1 Python looks for a local variable to inner and not finding it looks in the enclosing scope which is the function outer, finding it there.
+But what about things from the point of view of variable lifetime? Our variable x is local to the function outer which means it only exists while the function outer is running. We aren’t able to call inner till after the return of outer so according to our model of how Python works, x shouldn’t exist anymore by the time we call inner and perhaps a runtime error of some kind should occur.
+It turns out that, against our expectations, our returned inner function does work. Python supports a feature called function closures which means that inner functions defined in non-global scope remember what their enclosing namespaces looked like at definition time. This can be seen by looking at the func_closure attribute of our inner function which contains the variables in the enclosing scopes.
+

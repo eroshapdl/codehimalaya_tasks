@@ -1,0 +1,1 @@
+have to read about list and string slicing

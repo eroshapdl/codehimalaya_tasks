@@ -1,0 +1,17 @@
+Itemgetter creates a function that, when given an iterable (like a list or tuple), returns the item at index n of that iterable.
+we could also use lambda
+itemgetter can be slightly more efficient than using a lambda because it is a built-in function designed specifically for item retrieval, while lambda functions require more overhead to define and call.
+
+sort function does not give return value. i tried to do sorted_by_age =  people.sort (key=itemgetter(2)), yesle return nai diyena. sort function use garda dhyan dine
+sorted_by_age = people
+sorted by age ma value assign garne vayera we write it first
+people = sorted_by_age gare error aaucha
+
+list is not callable. we cant call list like functions. error aaucha natra
+list ma harek item ma jana, for loop lagako cha
+for person in gender_sort:
+            first_name = person[0]
+            last_name = person[1]
+            age = person [2]
+            sex = person[3]
+ani index anusar assign gareko cha

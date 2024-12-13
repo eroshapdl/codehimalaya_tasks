@@ -1,0 +1,48 @@
+perimeter ra area function ma hamle @property rakheko cham. and 
+so call garda yini function haru as a attribute call garda vayo.
+rec_1.perimeter
+rec_1.area        these being called as attribute not function
+
+Avoid Printing Inside the Property:
+While printing is fine for debugging, properties should ideally focus on returning values. 
+You can remove the print statements or move them elsewhere.
+
+Why Return self._length Instead of self.length?
+
+When you use a property (@property decorator), self.length becomes a method-like attribute that
+calls the length getter. If you return self.length inside the getter, it leads to an infinite recursion loop 
+ because the getter keeps calling itself.
+Private Attribute (_length):
+
+    We store the actual value in a private attribute (_length).
+    The getter (length) reads from this private attribute and returns its value.
+    here:
+    @property
+    def length(self):
+        return self._length
+
+Why Not Use a Public Attribute?
+
+The purpose of using @property is to add control over how attributes are accessed or modified.
+
+    If you directly return or set a public attribute like self.length, you lose the ability to validate 
+    or manage it.
+
+What Does the Setter Do?
+
+The setter method (@length.setter) is called whenever you try to assign a value to the length property, like this:
+
+rect.length = 10  # This calls the setter method
+Steps in the Setter:
+
+    Validation:
+        The setter checks if the value is valid.
+        For example, it ensures the length is positive.
+
+    Assignment:
+        If the value is valid, it assigns it to the private attribute (_length).
+
+    Raises an Error (Optional):
+        If the value is invalid, the setter can raise an exception instead of silently setting an incorrect value.
+         in this code
+
