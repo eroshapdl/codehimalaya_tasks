@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block Mainblock %}
+<h1>Add a New Event</h1>
+
+<form method="POST">
+    {% csrf_token %}
+    
+    <div>
+        <label for="id_event_title">Event Title:</label>
+        {{ form.event_title }}
+        {% if form.event_title.errors %}
+        <div class="text-danger">
+            {% for error in form.event_title.errors %}
+                <p>{{ error }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+    </div>
+
+    <div>
+        <label for="id_event_date">Event Date:</label>
+        {{ form.event_date }}
+    </div>
+
+    <div>
+        <label for="id_event_time">Event Time:</label>
+        {{ form.event_time }}
+    </div>
+
+    <div>
+        <label for="id_event_address">Event Address:</label>
+        {{ form.event_address }}
+    </div>
+
+    <div>
+        <label for="id_event_description">Event Description:</label>
+        {{ form.event_description }}
+    </div>
+
+    <div>
+        <label for="id_event_price">Event Price:</label>
+        {{ form.event_price }}
+    </div>
+
+    <div>
+        <label for="id_event_capacity">Event Capacity:</label>
+        {{ form.event_capacity }}
+    </div>
+
+    <button type="submit" class="btn btn-primary">Add Event</button>
+</form>
+
+{% endblock %}

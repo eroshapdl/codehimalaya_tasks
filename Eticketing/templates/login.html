@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load static %}
+{% block Mainblock %}
+
+<h1>Login</h1>
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+<form method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="hidden" name="next" value="{{ request.GET.next }}">
+    <button type="submit">Login</button>
+    <p>Don't have an account? <a href="{% url 'ticket_app:register' %}">Register Now</a></p>
+</form>
+
+{%endblock%}

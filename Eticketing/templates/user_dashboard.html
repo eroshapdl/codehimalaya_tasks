@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block Mainblock %}
+
+<h1> user dashboard </h1>
+<div class="card-footer text-center">
+    <a href="{% url 'ticket_app:event_list' %}" class="btn btn-primary">View Events</a>
+    <a href="{% url 'ticket_app:user_ticket' %}" class="btn btn-primary">View Your Ticket</a>
+</div>
+
+{% endblock %}

@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% load static %}
+{% block Mainblock %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Ticket Sales</title>
+    <style>
+        /* Style the table for consistency */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        table th, table td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        table th {
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        table td {
+            background-color: #fff;
+        }
+
+        /* Make the pie chart smaller and centered */
+        #ticketSalesChart {
+            width: 250px;
+            height: 250px;
+            margin: 20px auto;
+        }
+
+        /* General Styling */
+        .container {
+            padding: 20px;
+        }
+
+        h1, h3 {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Event: {{ event.event_title }}</h1>
+        <p><strong>Description:</strong> {{ event.event_description }}</p>
+        <p><strong>Date:</strong> {{ event.event_date }}</p>
+        <p><strong>Time:</strong> {{ event.event_time }}</p>
+        <p><strong>Location:</strong> {{ event.event_address }}</p>
+        <p><strong>Ticket Price:</strong> {{ event.event_price }}</p>
+        <p><strong>Event Capacity:</strong> {{ event.event_capacity }}</p>
+        
+        <h2>Ticket Sales Summary</h2>
+        
+        <!-- Ticket Sales Information in a Table -->
+        <table>
+            <thead>
+                <tr>
+                    <th>Metric</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Total Tickets Sold</td>
+                    <td>{{ ticket_sales }}</td>
+                </tr>
+                <tr>
+                    <td>Remaining Seats</td>
+                    <td>{{ remaining_seats }}</td>
+                </tr>
+                <tr>
+                    <td>Revenue Generated</td>
+                    <td>{{ revenue_generated }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Ticket Sales Distribution</h3>
+        
+        <!-- Pie Chart -->
+        <canvas id="ticketSalesChart"></canvas>
+
+        <script>
+            var ctx = document.getElementById('ticketSalesChart').getContext('2d');
+            var ticketSalesChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['Tickets Sold', 'Remaining Seats'],
+                    datasets: [{
+                        label: 'Ticket Sales Distribution',
+                        data: [{{ ticket_sales }}, {{ remaining_seats }}],
+                        backgroundColor: [
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(tooltipItem) {
+                                    return tooltipItem.label + ': ' + tooltipItem.raw;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        </script>
+    </div>
+</body>
+</html>
+
+{% endblock %}

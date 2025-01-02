@@ -1,0 +1,7 @@
+<form action="/create_student/" method="post">
+    {% csrf_token %}
+    {% for form in formset%}
+        {{form}}
+    {% endfor %}
+<input type="submit" value="Submit">
+</form>

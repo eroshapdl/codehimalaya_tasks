@@ -1,0 +1,40 @@
+1. 1st ma url.py ma path yourname ko url banaucha ani view ko yourname function ma jancha. 
+suru ko /yourname url load huna ko lagi default ma GET method use bhayera nai aaucha. so else:
+ 
+ 
+2.        form = NameForm()
+ le It creates a new (empty) NameForm() instance and passes it to the template context.
+ 
+3. ani, yourname.html file ma jancha.
+     The form has:
+        action="/yourname/": Tells the browser to send form data back to /yourname/.
+        method="post": Specifies the HTTP POST method for the form submission.
+
+Result: The user sees the form and can input their name.
+When the user enters a name (e.g., "John Doe") and clicks "Submit," the form sends the data to /yourname/ via a POST request.
+
+4. Handling the POST Request in the yourName View
+
+The browser sends the form data as part of the request body. Django handles this as follows:
+Relevant Code:
+
+if request.method == "POST":
+    form = NameForm(request.POST)
+    if form.is_valid():
+        return HttpResponseRedirect("/thanks/")
+
+    Step-by-Step Breakdown:
+        if request.method == "POST"::
+            Confirms this is a POST request.
+        form = NameForm(request.POST):
+            Creates a NameForm instance and populates it with the submitted data (request.POST).
+        if form.is_valid()::
+            Validates the submitted data:
+                Checks that the your_name field is present and contains no more than 100 characters (as defined in NameForm).
+        return HttpResponseRedirect("/thanks/"):
+            If the form is valid:
+                Redirects the browser to /thanks/ using an HTTP 302 response.
+
+******************************************************************************
+
+NameForm is django ko form field ko type. aru form filed ko type are, Charfield, Emailfield, Booleanfield

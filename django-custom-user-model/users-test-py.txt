@@ -1,0 +1,51 @@
+The flow of the program is as follows:
+
+    Test Case Setup:
+        The test case is defined in a UsersManagersTests class, which inherits from Django's TestCase. This class will test the behavior of the custom user model and its manager methods (create_user and create_superuser).
+        The methods test_create_user and test_create_superuser define the tests for creating a normal user and a superuser, respectively.
+
+    Creating a Regular User (in test_create_user):
+        User = get_user_model(): This line retrieves the custom user model that is being used in the project (either the default User model or your custom user model).
+        user = User.objects.create_user(email="normal@user.com", password="foo"): This line creates a regular user using the create_user manager method. It passes an email and a password. The method automatically handles creating a user with the correct default fields.
+        The program then performs several assertions to verify that the user was created with the expected attributes:
+            The email should be "normal@user.com".
+            The is_active flag should be True (as a normal user is active by default).
+            The is_staff flag should be False (since regular users are not staff members).
+            The is_superuser flag should be False (since regular users are not superusers).
+        It also checks the username field (which might be None if the custom user model doesn't use it).
+        The program tests edge cases where invalid or missing data is passed to the create_user method, ensuring that it raises appropriate errors:
+            If no arguments are passed to create_user(), a TypeError is raised.
+            If an empty email is passed, a TypeError is raised.
+            If an empty email and a password are passed, a ValueError is raised.
+
+    Creating a Superuser (in test_create_superuser):
+        User = get_user_model(): Similar to the previous test, this retrieves the custom user model.
+        admin_user = User.objects.create_superuser(email="super@user.com", password="foo"): This line creates a superuser using the create_superuser manager method. It passes an email and a password, and the method ensures the superuser is created with the is_staff and is_superuser flags set to True.
+        Several assertions follow to verify that the superuser was created correctly:
+            The email should be "super@user.com".
+            The is_active, is_staff, and is_superuser flags should all be True, as these are typical for superusers.
+        It also checks the username field (which might be None if the custom user model doesn’t use it).
+        It tests for an invalid superuser creation by trying to create a superuser with is_superuser=False. This should raise a ValueError, as superusers must have is_superuser=True.
+
+Execution Flow:
+
+    Step 1: Test Initialization:
+    When the test class UsersManagersTests is executed, the Django test runner sets up the test environment and runs each test method in isolation. Each method is run inside a database transaction that is rolled back after the test, ensuring that the database remains clean between tests.
+
+    Step 2: Running test_create_user:
+        The test_create_user method tests the creation of a regular user using the create_user method.
+        The program checks if the user was created with the correct properties and performs assertions to verify that the values of email, is_active, is_staff, and is_superuser are correct.
+        It also tests edge cases where incorrect or incomplete data is passed to create_user(), ensuring that errors are raised when necessary.
+
+    Step 3: Running test_create_superuser:
+        The test_create_superuser method tests the creation of a superuser using the create_superuser method.
+        The program checks if the superuser was created with the correct properties, including email, is_active, is_staff, and is_superuser.
+        It also tests that trying to create a superuser with is_superuser=False raises an error, as this is invalid.
+
+    Step 4: Conclusion:
+    After running both methods, the test runner reports whether each assertion passed or failed. If everything works as expected, the tests will pass, confirming that the create_user and create_superuser methods are functioning correctly. If there are any errors or unexpected behavior, the test will fail, and the error message will provide details about the issue.
+
+In summary, the test is checking:
+
+    The correct creation of regular users and superusers.
+    That invalid data or incorrect parameters are rejected with the appropriate error messages.

@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load static %}
+{% block Mainblock %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Tickets</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Your Tickets</h1>
+
+        {% if ticket %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Event</th>
+                        <th>Ticket Type</th>
+                        <th> Purchased Date </th>
+                        <th>Quantity</th>
+                        <th>Total Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ticket in ticket %}
+                        <tr>
+                            <td>{{ ticket.event_details.event_title }}</td>
+                            <td>{{ ticket.status }}</td>
+                            <td> {{ticket.ticket_purchase_date}} </td>
+                            <td>{{ ticket.ticket_quantity }}</td>
+                            <td>{{ ticket.total_price }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>You have no tickets.</p>
+        {% endif %}
+    </div>
+</body>
+</html>
+{%endblock%}	

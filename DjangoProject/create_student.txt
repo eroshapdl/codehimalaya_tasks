@@ -1,0 +1,21 @@
+class StudentForm (forms.Form):
+    student_name = forms.CharField (label = "Student Name", max_length=100)
+#the graduated field must be checked (True) when the form is submitted.
+#If the checkbox is left unchecked, the form will not validate, and the user will see an error.
+    graduated = forms.BooleanField (required = True)
+
+
+the form bounding means, sending default values to form.
+
+in forms.py
+bio = forms.CharField (label = "Student Bio", max_length= 1000, widget= forms.Textarea), sudent le bio lekhda, sano text box aaucha. 
+but widget le thulo text box banaidincha and we can make bio lekhne box sano thulo ac to need.
+
+by using form templates, content kasari view huncha, we can control.
+.html file ma 
+    {{ form.as_ul }} le harek label lai bullets add garcha
+    label, tag, value are some of templates, cheak if feild is hidden
+  
+************Formsets*********************
+if i have to create multiple students in one form, we use formset
+we impoer formset.factory to use formset

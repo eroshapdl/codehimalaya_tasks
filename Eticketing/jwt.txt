@@ -1,0 +1,5 @@
+The djangorestframework-simplejwt package provides a simple way to implement JWT authentication 
+in Django REST framework applications. It includes views and serializers for generating and 
+refreshing JWT tokens, as well as a built-in token authentication backend for validating tokens.
+
+https://dev.to/ki3ani/implementing-jwt-authentication-and-user-profile-with-django-rest-api-part-3-3dh9

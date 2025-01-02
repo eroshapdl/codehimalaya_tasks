@@ -1,0 +1,32 @@
+</head>
+<body>
+    
+    <h1>All Events</h1>
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    
+    {% if event_list %}
+        <ul>
+            {% for event in event_list %}
+                <li>
+                    <strong>{{ event.event_title }}</strong>
+                    <br>Date: {{ event.event_date }}
+                    <br>Time: {{ event.event_time }}
+                    <br>Address: {{ event.event_address }}
+                    <br>Description: {{ event.event_description }}
+                    <br>Price: {{ event.event_price }}
+                    <form action="{% url 'ticket_app:purchase_ticket' event.id %}" method = "POST">
+                        {%csrf_token%}
+                        <button type="submit">Buy Ticket</button>
+                    </form>
+                    
+
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No events available.</p>
+    {% endif %}
+</body>
+</html>

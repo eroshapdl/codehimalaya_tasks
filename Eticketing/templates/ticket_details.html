@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block Mainblock %}
+<div class="container py-5">
+    <h1 class="text-center">Ticket Details for {{ user.username }} </h1>
+
+    {% if tickets %}
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Event Title</th>
+                <th>Ticket Quantity</th>
+                <th>Ticket Type</th>
+                <th>Total Price</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            {% for ticket in tickets %}
+            <tr>
+                <td>{{ ticket.event_details.event_title }}</td>
+                <td>{{ ticket.ticket_quantity }}</td>
+                <td>{{ ticket.status }}</td>
+                <td>{{ ticket.total_price }}</td>
+                <td>{{ ticket.purchase_date }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No tickets found for this user and event.</p>
+    {% endif %}
+</div>
+{% endblock %}

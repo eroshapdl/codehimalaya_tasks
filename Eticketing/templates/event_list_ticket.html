@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block Mainblock %}
+<!-- Main Content Wrapper -->
+<div class="container py-5">
+    <div class="row">
+        <div class="col-12 text-center mb-4">
+            <h1 class="display-4">All Events</h1>
+
+            {% if events %}
+            <div class="row">
+                <div class="col-12">
+                    <table class="table table-bordered table-hover">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Event Title</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for event in events %}
+                                <tr>
+                                    <td><strong>{{ event.event_title }}</strong></td>
+                                    
+                                    <td>
+                                        
+                                       
+                                        <a href="{% url 'admin_app:ticket_sales' event.id %}" class="btn btn-sm btn-info">
+                                            View Ticket Sales
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% else %}
+            <div class="row">
+                <div class="col-12 text-center">
+                    <p>No events available.</p>
+                </div>
+            </div>
+            {% endif %}
+        
+        </div>
+        {% endblock %}

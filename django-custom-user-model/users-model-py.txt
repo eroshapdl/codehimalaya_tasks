@@ -1,0 +1,6 @@
+
+    Created a new class called CustomUser that subclasses AbstractUser
+    Removed the username field
+    Made the email field required and unique
+    Set the USERNAME_FIELD -- which defines the unique identifier for the User model -- to email
+    Specified that all objects for the class come from the CustomUserManager

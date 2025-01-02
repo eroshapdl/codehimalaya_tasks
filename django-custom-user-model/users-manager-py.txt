@@ -1,0 +1,61 @@
+Flow of Code in CustomUserManager
+
+First, we need to add a custom Manager, by subclassing BaseUserManager, that uses an email as the unique identifier instead of a username.
+
+In Django, a manager is a class that manages database query operations for model instances. By subclassing BaseUserManager, we customize the default user manager to handle a custom user model. In this case, the custom manager handles users with an email as the unique identifier instead of the default username.
+
+Let's break down the flow of code in the CustomUserManager:
+
+    Custom Manager Class:
+        CustomUserManager(BaseUserManager) is a class that inherits from Django's BaseUserManager.
+        BaseUserManager provides basic methods to create users and superusers. We override its methods to change the way users are created (in this case, using email instead of username).
+
+    create_user Method:
+        This method is responsible for creating and saving a regular user.
+        Parameters: It accepts email, password, and any other extra_fields (additional attributes like first_name, last_name, etc.).
+        Validation: The if not email check ensures that the email is not empty. If it is, a ValueError is raised with the message "The Email must be set".
+        Normalize Email: self.normalize_email(email) ensures that the email is standardized (e.g., making it lowercase), as emails are typically case-insensitive.
+        Create User: user = self.model(email=email, **extra_fields) creates a user instance using the email and any additional fields provided. Here, self.model refers to the user model that the manager is associated with (i.e., CustomUser).
+        Set Password: user.set_password(password) hashes the password before saving it to the database. It's essential not to store passwords in plain text.
+        Save User: user.save() saves the user instance to the database.
+        Return User: The create_user method returns the created user object.
+
+    create_superuser Method:
+        This method is used to create a superuser, which is a user with administrative privileges.
+        Parameters: It accepts email, password, and any additional extra_fields.
+        Set Defaults for Superuser:
+            extra_fields.setdefault("is_staff", True) ensures that is_staff is set to True for superusers (i.e., the user should have admin access to the Django admin site).
+            extra_fields.setdefault("is_superuser", True) ensures that is_superuser is set to True (i.e., the user should have full control over the site).
+            extra_fields.setdefault("is_active", True) ensures that is_active is True for the superuser.
+        Validation:
+            if extra_fields.get("is_staff") is not True checks if is_staff is not set to True. If it's not, a ValueError is raised with the message "Superuser must have is_staff=True."
+            Similarly, if extra_fields.get("is_superuser") is not True checks that the user is indeed a superuser. If not, a ValueError is raised with the message "Superuser must have is_superuser=True."
+        Create User: Once the necessary attributes are set, the method calls self.create_user(email, password, **extra_fields) to create the user using the create_user method.
+        Return Superuser: The method returns the created superuser.
+
+What Does BaseUserManager Do?
+
+BaseUserManager is a built-in class in Django that provides methods to handle creating users. When you create a custom user model, you typically subclass BaseUserManager to override the default user creation process.
+
+    BaseUserManager Features:
+        It provides basic methods to create and save users and superusers.
+        It includes the create_user method (used for regular users) and the create_superuser method (used for administrative users).
+        The BaseUserManager handles common tasks, such as ensuring the user’s password is hashed before saving and ensuring the user’s email is normalized.
+
+By subclassing BaseUserManager, you gain the flexibility to customize the process of creating users and superusers, allowing you to use custom fields (such as email instead of username).
+Example Workflow
+
+    When a regular user is created using User.objects.create_user(email="user@example.com", password="securepassword"):
+        The create_user method is called.
+        The email is normalized (e.g., making it lowercase).
+        The password is hashed.
+        The user is saved to the database with the email and hashed password.
+
+    When a superuser is created using User.objects.create_superuser(email="admin@example.com", password="securepassword"):
+        The create_superuser method is called.
+        The is_staff, is_superuser, and is_active attributes are set to True.
+        The user is saved to the database as a superuser with the necessary privileges.
+
+Conclusion
+
+By subclassing BaseUserManager, the CustomUserManager class allows you to modify the user creation process to use email as the unique identifier for users, and it customizes the creation of regular users and superusers to ensure the necessary fields and validation are handled correctly.

@@ -1,0 +1,33 @@
+{% load static %} <!-- Load static files -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title> <!-- Dynamic title -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}"> <!-- Link to external CSS -->
+</head>
+<body>
+    <!-- Page Header -->
+    <header>
+        <h1>{{ head }}</h1> <!-- Dynamic header text -->
+        <p>This is a simple HTML page template</p>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <h2>About This Page</h2>
+        <p>This is a basic structure of an HTML webpage. Customize it as needed.</p>
+        <button id="alertButton">Click Me!</button> <!-- JavaScript Event -->
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 My Website. All Rights Reserved.</p>
+    </footer>
+
+    <!-- Link to external JavaScript -->
+    <script src="{% static 'js/scripts.js' %}"></script>
+</body>
+</html>
