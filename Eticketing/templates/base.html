@@ -44,17 +44,18 @@
             <li class="sidebar-header">Pages</li>
 
             <li class="sidebar-item active">
-              {% if 'Admin' in user_groups %}
+              {% if is_admin %}
               <a class="sidebar-link" href="{% url 'admin_app:admin_home' %}">
-                <i class="align-middle" data-feather="sliders"></i>
-                <span class="align-middle">Dashboard</span>
+                  <i class="align-middle" data-feather="sliders"></i>
+                  <span class="align-middle">Dashboard</span>
               </a>
-              {% elif 'User' in user_groups %}
-              <a
-                class="sidebar-link"
-                href="{% url 'ticket_app:user_dashboard' %}"
-              >
-			  {% endif %}
+              {% elif is_user %}
+              <a class="sidebar-link" href="/user_dashboard/">
+                <i class="align-middle" data-feather="sliders"></i>
+                <span class="align-middle">Home</span>
+              </a>
+              {% endif %}
+          </li>
                 
             <li class="sidebar-item">
               <a class="sidebar-link" href="/events/">
@@ -64,10 +65,30 @@
             </li>
 
             <li class="sidebar-item">
-              <a class="sidebar-link" href="pages-blank.html">
+              {% if is_admin %}
+              <a class="sidebar-link" href="/admin_app/user_list/">
                 <i class="align-middle" data-feather="book"></i>
-                <span class="align-middle">Blank</span>
+                <span class="align-middle">User List</span>
               </a>
+              {% endif %}
+            </li>
+
+            <li class="sidebar-item">
+              {% if is_admin %}
+              <a class="sidebar-link" href="/admin_app/event_list_ticket/">
+                <i class="align-middle" data-feather="book"></i>
+                <span class="align-middle">Ticket Sales</span>
+              </a>
+              {% endif %}
+            </li>
+
+            <li class="sidebar-item">
+              {% if is_user %}
+              <a class="sidebar-link" href="/user_ticket/">
+                <i class="align-middle" data-feather="book"></i>
+                <span class="align-middle">Ticket Details</span>
+              </a>
+              {% endif %}
             </li>
 
             <li class="sidebar-header">Tools & Components</li>
