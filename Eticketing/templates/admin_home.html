@@ -3,15 +3,188 @@
 <main class="d-flex justify-content-center align-items-center py-5">
     <div class="container">
         <div class="row">
-            <div class="col-md-6 mx-auto text-center">
+            <div class="col-md-8 mx-auto text-center">
                 <h1>Welcome to Admin Panel</h1>
+                
                 {% if user.is_authenticated %}
-                    <a href="{% url 'ticket_app:event_list' %}" class="btn btn-primary">Go to Event List</a>
-                    <a href="{% url 'admin_app:user_list' %}" class="btn btn-primary">Go to User List</a>
-                    <a href="{% url 'admin_app:event_list_ticket' %}" class="btn btn-primary">View ticket sales</a>
-                {% else %}
-                <a href="{% url 'ticket_app:sign_in' %}" class="btn btn-primary">Sign In</a>
+                    <div class="mb-4">
+                        <a href="{% url 'ticket_app:event_list' %}" class="btn btn-primary mx-2">Go to Event List</a>
+                        <a href="{% url 'admin_app:user_list' %}" class="btn btn-primary mx-2">Go to User List</a>
+                        <a href="{% url 'admin_app:event_list_ticket' %}" class="btn btn-primary mx-2">View Ticket Sales</a>
+                    </div>
                 {% endif %}
+
+                <div class="row mt-5">
+                    <!-- Table for Events and Tickets -->
+                    <div class="col-md-8">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Metric</th>
+                                    <th>Count</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Total Events Created Till Date</td>
+                                    <td id="event_count">Loading...</td>
+                                </tr>
+                                <tr>
+                                    <td>Total Tickets Sold Till Date</td>
+                                    <td id="ticket_count">Loading...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                
+                    <!-- Text Box for Total Users -->
+                    <div class="col-md-4">
+                        <div class="border p-4 text-center">
+                            <h4>Total Registered Users</h4>
+                            <p class="display-6" id="user_count">Loading...</p>
+                        </div>
+                    </div>
+                </div>
+
+                
+    <div class="charts-container" style="display: flex; justify-content: space-around; gap: 20px;">
+        <div class="chart" style="width: 300px; text-align: center;">
+            <h2>Events Pie Chart</h2>
+            <canvas id="eventPieChart" width="300" height="300"></canvas>
+        </div>
+    <div class="chart" style="width: 300px; text-align: center;">
+        <h2>Today's Event Ticket Sales</h2>
+        <canvas id="eventBarChart" width="300" height="300"></canvas>
+    </div>
+</div>
+                <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                <script>
+                    $(document).ready(function() {
+                        // Fetch data using AJAX
+                        function fetchData() {
+                            $.ajax({
+                                url: "{% url 'admin_app:admin_home' %}",
+                                type: "GET",
+                                success: function(response) {
+                                    // Update the table with new data
+                                    $("#event_count").text(response.event_count);
+                                    $("#ticket_count").text(response.ticket_count);
+                                    $("#user_count").text(response.user_count);
+
+                                    // Update the pie chart with new data
+                                    updatePieChart(response.past_events, response.events_today, response.upcoming_events);
+                                    updateBarChart(response.event_names, response.ticket_sales);
+                                },
+                                error: function(xhr, status, error) {
+                                    console.error("Error fetching data: ", error);
+                                }
+                                
+                      
+                            });
+                        }
+
+                        // Function to update the Chart.js pie chart
+                        function updatePieChart(past, today, upcoming) {
+                            const data = {
+                                labels: ['Past Events', 'Today Events', 'Upcoming Events'],
+                                datasets: [{
+                                    data: [past, today, upcoming],
+                                    backgroundColor: [
+                                        'rgba(255, 99, 132, 0.2)',  // Red
+                                        'rgba(255, 206, 86, 0.2)',  // Yellow
+                                        'rgba(54, 162, 235, 0.2)'   // Blue
+                                    ],
+                                    borderColor: [
+                                        'rgba(255, 99, 132, 1)',  // Red
+                                        'rgba(255, 206, 86, 1)',  // Yellow
+                                        'rgba(54, 162, 235, 1)'   // Blue
+                                    ],
+                                    borderWidth: 1
+                                }]
+                            };
+
+                            const config = {
+                                type: 'pie',
+                                data: data,
+                                options: {
+                                    animation: {
+                                        duration: 0  // Disable animation
+                                    }
+                                }
+                            };
+
+                            
+
+                            // Destroy existing chart instance if it exists
+                            if (window.eventPieChart instanceof Chart) {
+                                window.eventPieChart.destroy();
+                            }
+
+                            // Create a new chart instance
+                            window.eventPieChart = new Chart(
+                                document.getElementById('eventPieChart'),
+                                config
+                            );
+                        }
+                        
+                        function updateBarChart(eventNames, ticketSales) {
+                            const data = {
+                                labels: eventNames,  // Event names
+                                datasets: [{
+                                    label: 'Ticket Sales',
+                                    data: ticketSales,  // Ticket sales corresponding to each event
+                                    backgroundColor: 'rgba(54, 162, 235, 0.2)',  // Blue
+                                    borderColor: 'rgba(54, 162, 235, 1)',  // Blue
+                                    borderWidth: 1
+                                }]
+                            };
+                
+                            const config = {
+                                type: 'bar',
+                                data: data,
+                                options: {
+                                    animation: {
+                                        duration: 0  // Set animation duration to 0 to stop animation
+                                    },
+                                    scales:{
+                                        yAxes:[{
+                                            ticks:{
+                                                beginAtZero: true
+                                            }
+                                        }]
+                                    }
+                                
+                                },
+                                
+                            };
+                
+                            // Destroy existing chart instance if it exists
+                            if (window.eventBarChart instanceof Chart) {
+                                window.eventBarChart.destroy();
+                            }
+                
+                            // Create a new chart instance
+                            window.eventBarChart = new Chart(
+                                document.getElementById('eventBarChart'),
+                                config
+                            );
+                        }
+                        // Initial data fetch
+                        fetchData();
+                        {% comment %}
+                        setInterval(fetchData, 1000);
+                        {% endcomment %}
+                        
+
+                    });
+
+                    
+                   
+                      
+                </script>
+
+
             </div>
         </div>
     </div>

@@ -11,7 +11,20 @@
     <h1>Purchase Tickets for {{ event.event_title }}</h1>
     <p>Description: {{event.event_description}}
     <p>Date: {{ event.event_date }}</p>
+    <p>Time: {{ event.event_time }}</p>
     <p>Price: {{ event.event_price }}</p>
+    <p>Address: {{ event.event_address }}</p>
+
+    {% if messages %}
+    <div class="container mt-3">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    </div>
+    {% endif %}
 
     <form method="post">
         {% csrf_token %}

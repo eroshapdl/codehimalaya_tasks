@@ -11,6 +11,10 @@ from django.contrib import messages
 from django.contrib.auth.models import Group
 from django.contrib.auth.models import User
 from django.contrib.sessions.models import Session
+from django.utils.timezone import now
+from django.db.models import Sum
+from django.contrib import messages
+
 
 def homepage(request):
     return HttpResponse ('this is homepage')
@@ -42,7 +46,7 @@ def event_view (request, id):
                 form.add_error('event_title', 'An event with this title already exists.')
             else:
                 form.save()
-                return redirect('ticket_app:event_view', id=id)
+                return redirect('ticket_app:event_list')
             
             
         
@@ -52,10 +56,13 @@ def event_view (request, id):
 
 @login_required(login_url= "/sign_in")
 def event_list(request):
-    events = Event.objects.all()
+    today = now().date()
+    events_today = Event.objects.filter(event_date=today)
+    upcoming_events = Event.objects.filter(event_date__gt=today).order_by('event_date')
+    past_events = Event.objects.filter(event_date__lt=today).order_by('-event_date')
     user_groups = list(Group.objects.filter(user=request.user).values_list('name', flat=True))
-    print(user_groups)
-    return render(request, 'event_list.html', {'events': events,'user_groups': user_groups})
+    
+    return render(request, 'event_list.html', {'events_today': events_today, 'upcoming_events': upcoming_events, 'past_events':past_events ,'user_groups': user_groups})
 
 def admin_check(user):
     return user.is_superuser
@@ -107,23 +114,44 @@ def purchase_ticket(request, event_id):
             #event = form.cleaned_data['event']
             ticket_quantity = form.cleaned_data['ticket_quantity']
             ticket_type = form.cleaned_data['ticket_type']
+
+            existing_ticket = Ticket.objects.filter(user_details=user, event_details=event).first()
             
-            if event.event_capacity >= ticket_quantity:
+            if event.event_capacity >= ticket_quantity and event.event_capacity > 0:
                 total_price = event.event_price * ticket_quantity
+
+                if existing_ticket:
+                    existing_ticket.ticket_quantity += ticket_quantity
+                    existing_ticket.total_price += total_price
+                    existing_ticket.save()
+
+                    event.event_capacity -= ticket_quantity
+                    event.save()
+
+                    messages.success(request, f'{ticket_quantity} more tickets have been added to your existing order for event {event}.')
+                   
             
-            # create new ticket record
-            ticket = Ticket.objects.create(
-                event_details=event,
-                user_details= user,
-                ticket_quantity=ticket_quantity,
-                total_price=total_price,
-                status=ticket_type,
-            )
 
-            event.event_capacity -= ticket_quantity
-            event.save()
+                else:
+                     # create new ticket record
+                    ticket = Ticket.objects.create(
+                        event_details=event,
+                        user_details= user,
+                        ticket_quantity=ticket_quantity,
+                        total_price=total_price,
+                        status=ticket_type,
+                    )
 
-            return HttpResponse(f'{ticket_quantity} Tickets has been placed of price {total_price} of event {event}.') 
+                    event.event_capacity -= ticket_quantity
+                    event.save()
+
+                    messages.success(request, f'{ticket_quantity} Tickets has been placed of price {total_price} of event {event}.')
+                    
+            else:
+                messages.error (request, f'Sorry the event {event} has only {event.event_capacity} seats available.')
+                
+            
+        
         
          
     else:

@@ -13,10 +13,11 @@ class Event (models.Model):
     event_capacity = models.IntegerField()
     event_price = models.DecimalField(max_digits=8, decimal_places=2)
     event_uuid= models.UUIDField(default=uuid.uuid4)
-
+    
     def __str__(self):
         return self.event_title
-
+    
+    
 
 
 class Ticket (models.Model):
