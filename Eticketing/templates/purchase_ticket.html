@@ -6,14 +6,14 @@
 {% load bootstrap5 %}
 {% bootstrap_css %}
 {% bootstrap_javascript %}
-</head>
-<body>
+
     <h1>Purchase Tickets for {{ event.event_title }}</h1>
     <p>Description: {{event.event_description}}
     <p>Date: {{ event.event_date }}</p>
     <p>Time: {{ event.event_time }}</p>
     <p>Price: {{ event.event_price }}</p>
     <p>Address: {{ event.event_address }}</p>
+
 
     {% if messages %}
     <div class="container mt-3">
@@ -25,13 +25,11 @@
         {% endfor %}
     </div>
     {% endif %}
-
+    
     <form method="post">
         {% csrf_token %}
         {{ form }}
-        <button type="submit">Buy</button>
+        <button type="submit" class="btn btn-primary">Buy Tickets</button>
     </form>
-</body>
-</html>
 
 {%endblock%}

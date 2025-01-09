@@ -43,6 +43,8 @@ class TicketPurchaseForm (forms.Form):
         label="Ticket Type",
         widget=forms.Select(attrs={'class': 'form-control'})
     )
+    
+    
 
 class SignUpForm(UserCreationForm):
     first_name = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'class': 'form-control'}))

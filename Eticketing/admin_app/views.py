@@ -72,7 +72,7 @@ def admin_dashboard(request):
 
 @login_required(login_url= "/sign_in")
 def user_list(request):
-    user_groups = list(Group.objects.filter(user=request.user).values_list('name', flat=True))
+    user_groups = list(Group.objects.filter(user=request.user).values_list('name'))
     if not request.user.is_superuser:
         return HttpResponseForbidden("You are not authorized to access this page.")
     users = User.objects.filter(is_superuser=False)
@@ -142,6 +142,8 @@ def ticket_sales(request, id):
     ticket_sales = result['total_ticket_quantity'] or 0
     remaining_seats = event.event_capacity - ticket_sales
     revenue_generated = ticket_sales * event.event_price
+    from django.db import connection
+    print(len(connection.queries))
 
     return render (request, 'ticket_sales.html', {'event': event,'ticket_sales': ticket_sales, 'remaining_seats': remaining_seats,'revenue_generated': revenue_generated})
 

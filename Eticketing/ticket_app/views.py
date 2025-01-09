@@ -77,7 +77,7 @@ def admin_dashboard(request):
 @login_required(login_url="/sign_in")
 #@user_passes_test(admin_check, login_url= "/login")
 def event_create_form (request):
-    print(f"FUnc User: {request.user}, Groups: {request.user.groups.values_list('name', flat=True)}")
+    
     form = EventCreateForm()
     if request.method == 'POST':
         form = EventCreateForm (request.POST)
@@ -114,9 +114,13 @@ def purchase_ticket(request, event_id):
             #event = form.cleaned_data['event']
             ticket_quantity = form.cleaned_data['ticket_quantity']
             ticket_type = form.cleaned_data['ticket_type']
-
-            existing_ticket = Ticket.objects.filter(user_details=user, event_details=event).first()
             
+
+            existing_ticket = Ticket.objects.select_related('user_details', 'event_details').filter(user_details=user, event_details=event).first()
+            from django.db import connection
+            print(f"Number of database queries: {len(connection.queries)}")
+            for query in connection.queries:
+                print('quieries are',query['sql'])
             if event.event_capacity >= ticket_quantity and event.event_capacity > 0:
                 total_price = event.event_price * ticket_quantity
 
@@ -127,8 +131,10 @@ def purchase_ticket(request, event_id):
 
                     event.event_capacity -= ticket_quantity
                     event.save()
+                    messages.success(request, f'{ticket_quantity} tickets successfully purchased for event {event.event_title}.')
+                    return redirect('ticket_app:khalti_request', event_id=event.id)
 
-                    messages.success(request, f'{ticket_quantity} more tickets have been added to your existing order for event {event}.')
+                   
                    
             
 
@@ -140,12 +146,16 @@ def purchase_ticket(request, event_id):
                         ticket_quantity=ticket_quantity,
                         total_price=total_price,
                         status=ticket_type,
+                        
                     )
 
                     event.event_capacity -= ticket_quantity
                     event.save()
+                    messages.success(request, f'{ticket_quantity} tickets successfully purchased for event {event.event_title}.')
+                    return redirect('ticket_app:khalti_request', event_id=event.id)
+                
 
-                    messages.success(request, f'{ticket_quantity} Tickets has been placed of price {total_price} of event {event}.')
+
                     
             else:
                 messages.error (request, f'Sorry the event {event} has only {event.event_capacity} seats available.')
@@ -158,14 +168,20 @@ def purchase_ticket(request, event_id):
         # Prepopulate the event in the form and make it non-editable
         form = TicketPurchaseForm(initial={'event': event})
 
-    return render(request, 'purchase_ticket.html', {'form': form, 'event': event, 'user': user})
+    return render(request, 'purchase_ticket.html', {'form': form, 'event': event, 'user': user} )
+
+def khalti_request(request, event_id):
+    event = get_object_or_404(Event, id=event_id)
+    context = {'event': event}
+    return render (request, 'khaltirequest.html', context)
 
 #@group_required('Admin')
 #@login_required(login_url="/sign_in")
 def ticket_details(request, user_id):
    # event = get_object_or_404(Event, id=event_id)
     user = get_object_or_404 (User, id=user_id)
-    tickets = Ticket.objects.filter(user_details=user)
+    tickets = Ticket.objects.select_related('user_details').filter(user_details=user).only('ticket_quantity', 'status', 'total_price', 'ticket_purchase_date', 'event_details__event_title','user_details')
+    #we use select related as ticket many user 1 , many to one relation, and user is foregin key in ticket model
     #if request.method == 'POST':
     return render (request, 'ticket_details.html', {'user': user, 'tickets': tickets})
 
@@ -185,16 +201,15 @@ def profile(request):
 
 # View for sign-up page
 def sign_up(request):
+    form = SignUpForm()
     if request.method == 'POST':
-        form = SignUpForm (request.POST)
+        form = SignUpForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect('ticket_app:sign_in')
-        else:
-            print(form.errors)
-            messages.error(request, "There was an error creating your account.")
-    else:
-        form = SignUpForm()
+    
+        messages.error(request, "There was an error creating your account.")
+        
 
     return render (request, 'sign_up.html', {'form':form} )   
 
@@ -248,7 +263,7 @@ def user_dashboard(request):
 
 def user_ticket(request):
     
-    ticket = Ticket.objects.filter(user_details=request.user)
+    ticket = Ticket.objects.select_related('user_details', 'event_details').filter(user_details=request.user).only('ticket_quantity', 'ticket_purchase_date','status','total_price', 'event_details__event_title', 'user_details')
     
 
     return render(request, 'user_ticket.html', {'ticket': ticket})

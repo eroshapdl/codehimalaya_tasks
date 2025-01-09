@@ -36,7 +36,13 @@ class Ticket (models.Model):
         (Fanpit, 'Fanpit'),
         (VIP, 'Vip'),
     ]
-    status = models.CharField(max_length=7, choices=Ticket_CHOICES, default=General)
+    
+  
+    
+
+    status = models.CharField(max_length=10, choices=Ticket_CHOICES, default=General)
+    
+    payment_completed = models.BooleanField(default=False)
 
 
 

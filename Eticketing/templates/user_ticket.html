@@ -19,19 +19,19 @@
                     <tr>
                         <th>Event</th>
                         <th>Ticket Type</th>
-                        <th> Purchased Date </th>
-                        <th>Quantity</th>
+                        <th>Purchased Date</th>
                         <th>Total Price</th>
+                        <th>Quantity</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for ticket in ticket %}
+                    {% for user_ticket in ticket %}
                         <tr>
-                            <td>{{ ticket.event_details.event_title }}</td>
-                            <td>{{ ticket.status }}</td>
-                            <td> {{ticket.ticket_purchase_date}} </td>
-                            <td>{{ ticket.ticket_quantity }}</td>
-                            <td>{{ ticket.total_price }}</td>
+                            <td>{{ user_ticket.event_details.event_title }}</td>
+                            <td>{{ user_ticket.status }}</td>
+                            <td>{{ user_ticket.ticket_purchase_date }}</td>
+                            <td>{{ user_ticket.total_price }}</td>  
+                            <td>{{ user_ticket.ticket_quantity }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>
@@ -42,4 +42,4 @@
     </div>
 </body>
 </html>
-{%endblock%}	
+{% endblock %}
